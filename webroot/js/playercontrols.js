@@ -28,25 +28,9 @@ $(function() {
 	.click(function() {
 		var options;
 		if ( $( this ).text() === "play" ) {
-			
 			$.post("toserver.jsp", "pbbutton play");
-
-			options = {
-				label: "pause",
-				icons: {
-					primary: "ui-icon-pause"
-				}
-			};
 		} else {
-		
 			$.post("toserver.jsp", "pbbutton pause");
-
-			options = {
-				label: "play",
-				icons: {
-					primary: "ui-icon-play"
-				}
-			};
 		}
 		$( this ).button( "option", options );
 	});
@@ -58,13 +42,6 @@ $(function() {
 		}
 	})
 	.click(function() {
-		$( "#play" ).button( "option", {
-			label: "play",
-			icons: {
-				primary: "ui-icon-play"
-			}
-		});
-		
 		$.post("toserver.jsp", "pbbutton stop");
 	});
 	

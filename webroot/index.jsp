@@ -34,7 +34,11 @@
 				-->
 			</span>
 			<div id="slider"></div>
-			<input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;" />
+			<!--<input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;" />-->
+			<div id="FilePlayerStatusDisplay" style="padding-bottom:20px;"></div>
+			<select id="FileList" style="width:200">
+				<option value="0">Choose file...</option>
+			</select>
 		</div>
 	</body>
 </html>

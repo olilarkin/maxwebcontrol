@@ -12,16 +12,33 @@
 inlets = 1;
 outlets = 2;
 
-function statusobj() {
-	this.files = [];
+const kPBStopped = 0;
+const kPBPlaying = 1;
+const kPBPaused = 2;
+
+function filePlayerStatusObj()
+{
+	this.h = 0;
+	this.m = 0;
+	this.s = 0;
+	this.pbstate = kPBStopped;
+	this.loop = 0;
+	this.filename = "no file loaded";
+	this.msg = "";
+	this.file = 0;
+}
+
+function statusObj() {
+	this.files = ["anton.aif", "cello-f2.aif", "cherokee.aif", "drumLoop.aif", "jongly.aif", "rainstick.aif", "sho0630.aif", "vibes-a1.aif" ];
 	this.volume = 0;
+	this.fp = new filePlayerStatusObj();
 }
 
 //global variables
 var gStatus; // instance of statusobj containing representation of current status
 
 function init() {
-	gStatus = new statusobj;
+	gStatus = new statusObj;
 	outputStatus();
 }
 
@@ -34,6 +51,11 @@ outputStatus.local = 1;
 // full status as json from client
 function updateStatusFromClient(statusJSON) {
 	gStatus = JSON.parse(statusJSON);
+	outputStatus();
+}
+
+function addFile(filename) {
+	gStatus.files[gStatus.files.length] = filename;
 	outputStatus();
 }
 
@@ -52,6 +74,29 @@ function pbbutton(button) {
 function loop(val) {
 	// update state?
 	messnamed("loop", val);
+}
+
+function file(val) {
+	gStatus.fp.file = val;
+	gStatus.fp.filename = gStatus.files[val];
+
+	messnamed("file", gStatus.fp.filename);
+	outputStatus();
+}
+
+
+function playerstatus()
+{
+	//var player = arguments[0];
+	
+	gStatus.fp.pbstate = arguments[0];
+	gStatus.fp.h = arguments[1];
+	gStatus.fp.m = arguments[2];
+	gStatus.fp.s = arguments[3];
+	gStatus.fp.filename = arguments[4];
+	gStatus.fp.msg = arguments[5];
+	
+	outputStatus();
 }
 
 /*
