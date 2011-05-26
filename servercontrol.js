@@ -99,6 +99,14 @@ function playerstatus()
 	outputStatus();
 }
 
+function setmeters(left, right)
+{
+	gStatus.meterl = left;
+	gStatus.meterr = right;
+	
+	outputStatus();
+}
+
 /*
 	JSON parser
     http://www.JSON.org/json2.js

@@ -9,6 +9,9 @@
 
 */
 
+const kDisplayRefreshRate = 50;
+const kStatusRefreshRate = 30;
+
 const kPBStopped = 0;
 const kPBPlaying = 1;
 const kPBPaused = 2;
@@ -29,6 +32,8 @@ function statusObj() {
 	this.files = ["anton.aif", "cello-f2.aif", "cherokee.aif", "drumLoop.aif", "jongly.aif", "rainstick.aif", "sho0630.aif", "vibes-a1.aif" ];
 	this.volume = 0;
 	this.fp = new filePlayerStatusObj();
+	this.meterl = 0;
+	this.meterr = 0;
 }
 
 //global variables
@@ -43,8 +48,8 @@ function init() {
 
 $(document).ready(function() {
 	init();
-	gRefreshIDStatus = setInterval("getStatusFromServer()", 30);
-	gRefreshIDDisplay = setInterval("updateDisplay()", 50);
+	gRefreshIDStatus = setInterval("getStatusFromServer()", kStatusRefreshRate);
+	gRefreshIDDisplay = setInterval("updateDisplay()", kDisplayRefreshRate);
 	
 	updateFileList();
 
@@ -101,6 +106,12 @@ function updateDisplay() {
 		
 		gPrevState = gStatus.fp.pbstate;
 	}
+	
+	if(gStatus.files.length != $('#FileList option').size()-1)
+		updateFileList();
+	
+	$("#meterleft").progressbar( "option", "value", gStatus.meterl);
+	$("#meterright").progressbar( "option", "value", gStatus.meterr);
 }
 
 function getStatusFromServer() {
@@ -114,6 +125,9 @@ function sendStatusToServer() {
 }
 
 $(function() {
+
+	//Volume Slider
+	
 	$( "#slider" ).slider({
 		orientation: "horizontal",
 		range: "min",
@@ -127,11 +141,93 @@ $(function() {
 		}
 	});
 	
+	//Volume DB Readout
+	
 	$( "#amount" ).val( $( "#slider" ).slider( "value" ) );
+	
+	
+	//Meter
+	
+	$("#meterleft").progressbar({ value: 0 });
+	$("#meterright").progressbar({ value: 0 });
+
+	//List of files
 	
 	$("#FileList").change(function() {  
 		var newFile = $("#FileList").val() - 1;
 		$.post("toserver.jsp", "file " + newFile);
 		$("#FileList").val(0)
+	});
+	
+	//File Player Playback Controls
+	
+	$( "#beginning" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-seek-start"
+		}
+	})
+	.click(function() {
+		$.post("toserver.jsp", "pbbutton prev");
+	});
+	
+	$( "#rewind" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-seek-prev"
+		}
+	})
+	.click(function() {
+		$.post("toserver.jsp", "pbbutton rewind");
+	});
+	
+	$( "#play" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-play"
+		}
+	})
+	.click(function() {
+		var options;
+		if ( $( this ).text() === "play" ) {
+			$.post("toserver.jsp", "pbbutton play");
+		} else {
+			$.post("toserver.jsp", "pbbutton pause");
+		}
+		$( this ).button( "option", options );
+	});
+	
+	$( "#stop" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-stop"
+		}
+	})
+	.click(function() {
+		$.post("toserver.jsp", "pbbutton stop");
+	});
+	
+	$( "#forward" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-seek-next"
+		}
+	})
+	.click(function() {
+		$.post("toserver.jsp", "pbbutton forward");
+	});
+	
+	$( "#end" ).button({
+		text: false,
+		icons: {
+			primary: "ui-icon-seek-end"
+		}
+	})
+	.click(function() {
+		$.post("toserver.jsp", "pbbutton next");
+	});
+	
+	$( "#loop" ).button().click(function() {
+		$.post("toserver.jsp", "loop " +  +!$( this ).is(':checked') );
 	});
 });

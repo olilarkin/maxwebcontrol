@@ -28,6 +28,12 @@
 	margin-bottom: 10px;
 }
 
+.meter {
+	width: 200px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
 #toolbar {
 	padding: 18px 10px;
 }

@@ -9,7 +9,7 @@
 	    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
 	    <script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
 		<script type="text/javascript" src="js/clientcontrol.js"></script>
-		<script type="text/javascript" src="js/playercontrols.js"></script>
+		<!--<script type="text/javascript" src="js/playercontrols.js"></script>-->
 
 		<title>Max Web Control</title>
 	</head>
@@ -39,6 +39,8 @@
 			<select id="FileList" style="width:200">
 				<option value="0">Choose file...</option>
 			</select>
+			<div class="meter" id="meterleft" style="height:10px;"></div>
+			<div class="meter" id="meterright" style="height:10px;"></div>
 		</div>
 	</body>
 </html>
