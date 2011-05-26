@@ -29,8 +29,8 @@ function filePlayerStatusObj()
 }
 
 function statusObj() {
-	this.files = ["anton.aif", "cello-f2.aif", "cherokee.aif", "drumLoop.aif", "jongly.aif", "rainstick.aif", "sho0630.aif", "vibes-a1.aif" ];
-	this.volume = 0;
+	this.files = [];
+	this.gain = 0;
 	this.fp = new filePlayerStatusObj();
 	this.meterl = 0;
 	this.meterr = 0;
@@ -75,8 +75,8 @@ function updateFileList()
 }
 
 function updateDisplay() {
-	if(gStatus.volume != $( "#slider" ).val) {
-		$("#slider").slider( "option", "value", gStatus.volume );
+	if(gStatus.gain != $( "#slider" ).val) {
+		$("#slider").slider( "option", "value", gStatus.gain );
 		$("#amount").val(  gStatus.volume );
 	}
 
@@ -110,8 +110,8 @@ function updateDisplay() {
 	if(gStatus.files.length != $('#FileList option').size()-1)
 		updateFileList();
 	
-	$("#meterleft").progressbar( "option", "value", gStatus.meterl);
-	$("#meterright").progressbar( "option", "value", gStatus.meterr);
+	$("#MeterLeft").progressbar( "option", "value", gStatus.meterl);
+	$("#MeterRight").progressbar( "option", "value", gStatus.meterr);
 }
 
 function getStatusFromServer() {
@@ -127,7 +127,6 @@ function sendStatusToServer() {
 $(function() {
 
 	//Volume Slider
-	
 	$( "#slider" ).slider({
 		orientation: "horizontal",
 		range: "min",
@@ -135,21 +134,19 @@ $(function() {
 		max: 12,
 		value: 0,
 		slide: function( event, ui ) {
-			gStatus.volume = ui.value;
-			$.post("toserver.jsp", "volume " +  gStatus.volume );
-			$( "#amount" ).val(  gStatus.volume );
+			gStatus.gain = ui.value;
+			$.post("toserver.jsp", "gain " +  gStatus.gain );
+			$( "#readout" ).val(  gStatus.gain );
 		}
 	});
 	
 	//Volume DB Readout
-	
-	$( "#amount" ).val( $( "#slider" ).slider( "value" ) );
+	$( "#readout" ).val( $( "#slider" ).slider( "value" ) );
 	
 	
 	//Meter
-	
-	$("#meterleft").progressbar({ value: 0 });
-	$("#meterright").progressbar({ value: 0 });
+	$("#MeterLeft").progressbar({ value: 0 });
+	$("#MeterRight").progressbar({ value: 0 });
 
 	//List of files
 	

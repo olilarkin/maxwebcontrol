@@ -1,11 +1,12 @@
 /*
-	Max Web Control - Main server side js
-	Oli Larkin 2011
-	
-	Music Research Centre, University of York
-	http://www.york.ac.uk/music/mrc
-	http://www.olilarkin.c.uk
-	LGPL
+
+    Max Web Control - Main server side js
+    Oli Larkin 2011
+    
+    Music Research Centre, University of York
+    http://www.york.ac.uk/music/mrc
+    http://www.olilarkin.c.uk
+    LGPL
 
 */
 
@@ -18,97 +19,97 @@ const kPBPaused = 2;
 
 function filePlayerStatusObj()
 {
-	this.h = 0;
-	this.m = 0;
-	this.s = 0;
-	this.pbstate = kPBStopped;
-	this.loop = 0;
-	this.filename = "no file loaded";
-	this.msg = "";
-	this.file = 0;
+    this.h = 0;
+    this.m = 0;
+    this.s = 0;
+    this.pbstate = kPBStopped;
+    this.loop = 0;
+    this.filename = "no file loaded";
+    this.msg = "";
+    this.file = 0;
 }
 
 function statusObj() {
-	this.files = ["anton.aif", "cello-f2.aif", "cherokee.aif", "drumLoop.aif", "jongly.aif", "rainstick.aif", "sho0630.aif", "vibes-a1.aif" ];
-	this.volume = 0;
-	this.fp = new filePlayerStatusObj();
+    this.files = [];
+    this.gain = 0;
+    this.fp = new filePlayerStatusObj();
 }
 
 //global variables
 var gStatus; // instance of statusobj containing representation of current status
 
 function init() {
-	gStatus = new statusObj;
-	outputStatus();
+    gStatus = new statusObj;
+    outputStatus();
 }
 
 // update the server status
 function outputStatus() {
-	outlet(0, "set", "jsonparams", JSON.stringify(gStatus));
+    outlet(0, "set", "jsonparams", JSON.stringify(gStatus));
 }
 outputStatus.local = 1;
 
 // full status as json from client
 function updateStatusFromClient(statusJSON) {
-	gStatus = JSON.parse(statusJSON);
-	outputStatus();
+    gStatus = JSON.parse(statusJSON);
+    outputStatus();
 }
 
 function addFile(filename) {
-	gStatus.files[gStatus.files.length] = filename;
-	outputStatus();
+    gStatus.files[gStatus.files.length] = filename;
+    outputStatus();
 }
 
 // set one element from client
-function volume(val) {
-	messnamed("volume", val);
-	gStatus.volume = val;
-	outputStatus();
+function gain(val) {
+    messnamed("gain", val);
+    gStatus.gain = val;
+    outputStatus();
 }
 
 function pbbutton(button) {
-	// update state?
-	messnamed("pbbutton", button);
+    // update state?
+    messnamed("pbbutton", button);
 }
 
 function loop(val) {
-	// update state?
-	messnamed("loop", val);
+    // update state?
+    messnamed("loop", val);
 }
 
 function file(val) {
-	gStatus.fp.file = val;
-	gStatus.fp.filename = gStatus.files[val];
+    gStatus.fp.file = val;
+    gStatus.fp.filename = gStatus.files[val];
 
-	messnamed("file", gStatus.fp.filename);
-	outputStatus();
+    messnamed("file", gStatus.fp.filename);
+    outputStatus();
 }
 
 
 function playerstatus()
 {
-	//var player = arguments[0];
-	
-	gStatus.fp.pbstate = arguments[0];
-	gStatus.fp.h = arguments[1];
-	gStatus.fp.m = arguments[2];
-	gStatus.fp.s = arguments[3];
-	gStatus.fp.filename = arguments[4];
-	gStatus.fp.msg = arguments[5];
-	
-	outputStatus();
+    //var player = arguments[0];
+    
+    gStatus.fp.pbstate = arguments[0];
+    gStatus.fp.h = arguments[1];
+    gStatus.fp.m = arguments[2];
+    gStatus.fp.s = arguments[3];
+    gStatus.fp.filename = arguments[4];
+    gStatus.fp.msg = arguments[5];
+    
+    outputStatus();
 }
 
 function setmeters(left, right)
 {
-	gStatus.meterl = left;
-	gStatus.meterr = right;
-	
-	outputStatus();
+    gStatus.meterl = left;
+    gStatus.meterr = right;
+    
+    outputStatus();
 }
 
 /*
-	JSON parser
+    JSON parser
     http://www.JSON.org/json2.js
     2011-02-23
 */
