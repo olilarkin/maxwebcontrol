@@ -25,7 +25,7 @@ function filePlayerStatusObj()
 	this.loop = 0;
 	this.filename = "no file loaded";
 	this.msg = "";
-	this.file = 0;
+	this.file = -1;
 }
 
 function statusObj() {
@@ -184,14 +184,14 @@ $(function() {
 			primary: "ui-icon-play"
 		}
 	})
-	.click(function() {
-		var options;
-		if ( $( this ).text() === "play" ) {
-			$.post("toserver.jsp", "pbbutton play");
-		} else {
-			$.post("toserver.jsp", "pbbutton pause");
+	.click(function() {		
+		if(gStatus.files.length && gStatus.fp.file != -1) {
+			if ( $( this ).text() === "play" ) {
+				$.post("toserver.jsp", "pbbutton play");
+			} else {
+				$.post("toserver.jsp", "pbbutton pause");
+			}
 		}
-		$( this ).button( "option", options );
 	});
 	
 	$( "#stop" ).button({
@@ -201,7 +201,9 @@ $(function() {
 		}
 	})
 	.click(function() {
-		$.post("toserver.jsp", "pbbutton stop");
+		if(gStatus.files.length && gStatus.fp.file != -1) {
+			$.post("toserver.jsp", "pbbutton stop");
+		}
 	});
 	
 	$( "#forward" ).button({

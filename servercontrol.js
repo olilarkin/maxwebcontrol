@@ -26,7 +26,7 @@ function filePlayerStatusObj()
     this.loop = 0;
     this.filename = "no file loaded";
     this.msg = "";
-    this.file = 0;
+    this.file = -1;
 }
 
 function statusObj() {
